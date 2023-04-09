@@ -1,0 +1,4 @@
+name: MorphVasion
+version: '${project.version}'
+main: hobby.servah.morphvasion.MorphVasion
+api-version: 1.19
