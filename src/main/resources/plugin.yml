@@ -2,3 +2,8 @@ name: MorphVasion
 version: '${project.version}'
 main: hobby.servah.morphvasion.MorphVasion
 api-version: 1.19
+permissions:
+  morphvasion.*:
+    description: Wildcard permission --> all permissions concerning this plugin
+    children:
+      #TODO add all the other permissions
