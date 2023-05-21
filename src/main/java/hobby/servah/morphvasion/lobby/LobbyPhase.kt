@@ -1,6 +1,7 @@
-package hobby.servah.morphvasion.phase
+package hobby.servah.morphvasion.lobby
 
 import hobby.servah.morphvasion.MorphVasion
+import hobby.servah.morphvasion.manager.Phase
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
@@ -17,7 +18,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 
 class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
 
-    init {
+    private val itemHandler: LobbyItem = LobbyItem()
+
+    override fun enable() {
         for (p in Bukkit.getOnlinePlayers()) setupPlayer(p)
     }
 
@@ -36,7 +39,11 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
         p.health = 20.0
 
         //give the player all the necessary items
-
+        p.inventory.setItem(0, itemHandler.mapVote)
+        p.inventory.setItem(4, itemHandler.teamSelect)
+        if(p.isOp || p.hasPermission("morphvasion.start")) {
+            p.inventory.setItem(8, itemHandler.adminStart)
+        }
     }
 
     @EventHandler
@@ -51,7 +58,6 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
 
     @EventHandler
     fun onPickUp(e : PlayerAttemptPickupItemEvent) {
-        if(e.player.isOp) return
         if(e.player.hasPermission("morphvasion.*")) return
         e.item.remove()
         e.isCancelled = true
@@ -59,7 +65,6 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
 
     @EventHandler
     fun onBlockBreak(e : BlockBreakEvent) {
-        if(e.player.isOp) return
         if(e.player.hasPermission("morphvasion.*")) return
         e.isCancelled = true
     }
@@ -71,14 +76,12 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
 
     @EventHandler
     fun onBlockPlace(e: BlockPlaceEvent) {
-        if(e.player.isOp) return
         if(e.player.hasPermission("morphvasion.*")) return
         e.isCancelled = true
     }
 
     @EventHandler
     fun onItemDrop(e: PlayerDropItemEvent) {
-        if(e.player.isOp) return
         if(e.player.hasPermission("morphvasion.*")) return
         e.isCancelled = true
     }
@@ -92,6 +95,7 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
     fun onItemClick(e: InventoryClickEvent) {
         if(e.cursor === null) return
         e.isCancelled = true
+        itemHandler.onItemClick(e)
     }
 
 }

@@ -7,36 +7,32 @@ import org.bukkit.inventory.meta.ItemMeta
 
 class ItemBuilder(material: Material) {
 
-    private var stack: ItemStack? = null
-    private var meta: ItemMeta? = null
+    private val stack: ItemStack
+    private val meta: ItemMeta
 
     init {
         stack = ItemStack(material)
-        meta = stack!!.itemMeta
+        meta = stack.itemMeta
     }
 
-    fun setName(name: String): ItemBuilder {
-        meta!!.displayName(Component.text(name))
+    fun setName(name: Component): ItemBuilder {
+        meta.displayName(name)
         return this
     }
 
-    fun setLore(vararg lines: String): ItemBuilder {
-        val finalLore = mutableListOf<Component>()
-        lines.forEach { l ->
-            finalLore.add(Component.text(l))
-        }
-        meta!!.lore(finalLore)
+    fun setLore(vararg lines: Component): ItemBuilder {
+        meta.lore(lines.toList())
         return this
     }
 
     fun setAmount(amount: Int): ItemBuilder {
-        stack!!.amount = amount
+        stack.amount = amount
         return this
     }
 
     fun build(): ItemStack {
-        stack!!.itemMeta = meta
-        return stack!!
+        stack.itemMeta = meta
+        return stack
     }
 
 }
