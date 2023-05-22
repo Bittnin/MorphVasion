@@ -28,8 +28,8 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
         //TODO
     }
 
-    override fun getNextPhase() {
-
+    override fun getNextPhase(): Phase {
+        return this
     }
 
     private fun setupPlayer(p: Player) {

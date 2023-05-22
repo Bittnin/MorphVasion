@@ -9,7 +9,7 @@ import org.bukkit.event.Listener
 abstract class Phase(val plugin : MorphVasion) : Listener {
     abstract fun enable()
     abstract fun disable()
-    abstract fun getNextPhase()
+    abstract fun getNextPhase(): Phase
 }
 
 // All the phases are centralized and their listeners are only registered when they really need to be
@@ -30,5 +30,7 @@ class PhaseManager(private val plugin: MorphVasion) {
         Bukkit.getPluginManager().registerEvents(currentPhase, plugin)
         currentPhase.enable()
     }
+
+    fun getCurrentPhase(): Phase { return currentPhase }
 
 }

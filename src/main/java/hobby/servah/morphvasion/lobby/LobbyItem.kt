@@ -23,7 +23,11 @@ class LobbyItem {
     ).build()
 
     fun onItemClick(e: InventoryClickEvent) {
+        if(!e.isRightClick) return
 
+        if(e.currentItem?.itemMeta?.displayName() == adminStart.itemMeta.displayName()) {
+
+        }
     }
 
 }

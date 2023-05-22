@@ -2,6 +2,12 @@ name: MorphVasion
 version: '${project.version}'
 main: hobby.servah.morphvasion.MorphVasion
 api-version: 1.19
+commands:
+  start:
+    description: Allows players to start the game (skip the lobby phase) either via the /start command or the Redstone Dust in their inventories.
+    aliases: [s]
+    usage: /start
+    permission: morphvasion.start
 permissions:
   morphvasion.*:
     description: Wildcard permission --> all permissions concerning this plugin
