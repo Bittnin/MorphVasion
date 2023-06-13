@@ -1,0 +1,27 @@
+#┏━┓┏━┓━━━━━━━━━━━┏┓━━┏┓━━┏┓━━━━━━━━━━━━━━━━━━━
+#┃┃┗┛┃┃━━━━━━━━━━━┃┃━━┃┗┓┏┛┃━━━━━━━━━━━━━━━━━━━
+#┃┏┓┏┓┃┏━━┓┏━┓┏━━┓┃┗━┓┗┓┃┃┏┛┏━━┓━┏━━┓┏┓┏━━┓┏━┓━
+#┃┃┃┃┃┃┃┏┓┃┃┏┛┃┏┓┃┃┏┓┃━┃┗┛┃━┗━┓┃━┃━━┫┣┫┃┏┓┃┃┏┓┓
+#┃┃┃┃┃┃┃┗┛┃┃┃━┃┗┛┃┃┃┃┃━┗┓┏┛━┃┗┛┗┓┣━━┃┃┃┃┗┛┃┃┃┃┃
+#┗┛┗┛┗┛┗━━┛┗┛━┃┏━┛┗┛┗┛━━┗┛━━┗━━━┛┗━━┛┗┛┗━━┛┗┛┗┛
+#━━━━━━━━━━━━━┃┃━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#━━━━━━━━━━━━━┗┛━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+#DISCLAIMER: Not all settings in this config.yml *should* be changed. If you face any issues
+#            just delete the file and restart your server
+
+#---   MAPS SECTION   ---#
+maps:
+  default: 'default_map'
+  default_map:
+    #A block/item of this material will be displayed in the map vote inventory
+    icon: 'GRASS_BLOCK'
+    folder: 'default_map'
+    name: ''
+    description: '&aThis is the &ldefault &r&amap bundeled with the &2Morph&a&lVasion &r&ePlugin&a!'
+
+lobby:
+  maxLobbyTimer: 120
+  # This determines how many players need to be
+  # connected for the timer to be reduced
+  playerDropOff: 3

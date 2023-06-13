@@ -4,7 +4,7 @@ main: hobby.servah.morphvasion.MorphVasion
 api-version: 1.19
 commands:
   start:
-    description: Allows players to start the game (skip the lobby phase) either via the /start command or the Redstone Dust in their inventories.
+    description: Allows players to start the game (skip the lobby phase) either via the /start command or the Redstone Dust in their inventories. This command takes no arguments.
     aliases: [s]
     usage: /start
     permission: morphvasion.start
@@ -15,4 +15,4 @@ permissions:
       #TODO add all the other permissions
       morphvasion.start: true
   morphvasion.start:
-    description: Allows players to start the game (skip the lobby phase) either via the /start command or the Redstone Dust in their inventories.
+    description: Allows players to start the game (skip the lobby phase) either via the /start command or the Redstone Dust in their inventories. (Read more with "/help start")

@@ -7,8 +7,11 @@ import org.bukkit.plugin.java.JavaPlugin
 class MorphVasion : JavaPlugin() {
 
     private lateinit var phaseManager: PhaseManager
+    private lateinit var startCmd: StartCmd
 
     override fun onEnable() {
+        saveDefaultConfig()
+
         phaseManager = PhaseManager(this)
 
         registerCommands()
@@ -18,8 +21,10 @@ class MorphVasion : JavaPlugin() {
     }
 
     private fun registerCommands() {
-        getCommand("start")?.setExecutor(StartCmd(this))
+        startCmd = StartCmd(this)
+        getCommand("start")?.setExecutor(startCmd)
     }
 
     fun getPhaseManager(): PhaseManager { return phaseManager }
+    fun getStartCmd(): StartCmd { return startCmd }
 }

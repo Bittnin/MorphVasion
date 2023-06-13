@@ -6,7 +6,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 
-abstract class Phase(val plugin : MorphVasion) : Listener {
+abstract class Phase(protected val plugin : MorphVasion) : Listener {
     abstract fun enable()
     abstract fun disable()
     abstract fun getNextPhase(): Phase

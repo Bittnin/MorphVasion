@@ -15,21 +15,60 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.scheduler.BukkitTask
+import kotlin.math.roundToInt
 
-class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
 
-    private val itemHandler: LobbyItem = LobbyItem()
+class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
+
+    private val itemHandler: LobbyItem = LobbyItem(plugin)
+    private val config = plugin.config
+
+    //counter
+    private val maxLobbyTimer = config.getInt("lobby.maxLobbyTimer")
+    private var secondsLeft= -1
+    private lateinit var counterTask: BukkitTask
 
     override fun enable() {
         for (p in Bukkit.getOnlinePlayers()) setupPlayer(p)
+        counter()
     }
 
     override fun disable() {
-        //TODO
+        counterTask.cancel()
     }
 
     override fun getNextPhase(): Phase {
         return this
+    }
+
+    private fun counter() {
+        calculateSecondsLeft()
+        counterTask = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+            for (p in Bukkit.getOnlinePlayers()) {
+                p.level = secondsLeft
+                p.exp = secondsLeft.toFloat() / maxLobbyTimer.toFloat()
+            }
+            if (Bukkit.getOnlinePlayers().size < 2) return@Runnable
+
+            if (secondsLeft == 0) {
+                plugin.getPhaseManager().changePhase(this.getNextPhase())
+                counterTask.cancel()
+                return@Runnable
+            }
+            secondsLeft--
+        }, 0L, 20L)
+    }
+
+    private fun calculateSecondsLeft() {
+        val playerCount = Bukkit.getOnlinePlayers().size
+
+        secondsLeft = if (playerCount < 3) maxLobbyTimer
+        // it works --> don't touch it
+        else (((maxLobbyTimer - (maxLobbyTimer / (plugin.config.getInt("lobby.playerDropOff") + 1)))
+                / (playerCount / plugin.config.getInt("lobby.playerDropOff")))
+                / 10).toDouble().roundToInt() * 10
     }
 
     private fun setupPlayer(p: Player) {
@@ -39,6 +78,7 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
         p.health = 20.0
 
         //give the player all the necessary items
+        p.inventory.clear()
         p.inventory.setItem(0, itemHandler.mapVote)
         p.inventory.setItem(4, itemHandler.teamSelect)
         if(p.isOp || p.hasPermission("morphvasion.start")) {
@@ -48,7 +88,15 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin){
 
     @EventHandler
     fun onJoin(e: PlayerJoinEvent){
+        calculateSecondsLeft()
         setupPlayer(e.player)
+    }
+
+    @EventHandler
+    fun onLeave(e: PlayerQuitEvent) {
+        calculateSecondsLeft()
+
+        //TODO: remove their votes from the map vote system
     }
 
     @EventHandler
