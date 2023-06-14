@@ -17,7 +17,7 @@ maps:
     #A block/item of this material will be displayed in the map vote inventory
     icon: 'GRASS_BLOCK'
     folder: 'default_map'
-    name: ''
+    name: '&e&lPlace&r&aHoldèur'
     description: '&aThis is the &ldefault &r&amap bundeled with the &2Morph&a&lVasion &r&ePlugin&a!'
 
 lobby:

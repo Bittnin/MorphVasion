@@ -24,11 +24,19 @@ class LobbyItem(val plugin: MorphVasion) {
         Component.text("Click to select Team").color(NamedTextColor.WHITE)
     ).build()
 
+    private fun mapVoteInv() {
+
+    }
+
     fun onItemClick(e: InventoryClickEvent) {
         if(!e.isRightClick) return
 
         if(e.currentItem?.itemMeta?.displayName() == adminStart.itemMeta.displayName()) {
             plugin.getStartCmd().onCommand(e.whoClicked, HelpCommand(), "start", null)
+        }
+
+        if(e.currentItem?.itemMeta?.displayName() == mapVote.itemMeta.displayName()) {
+
         }
     }
 
