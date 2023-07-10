@@ -2,6 +2,7 @@ package hobby.servah.morphvasion
 
 import hobby.servah.morphvasion.commands.StartCmd
 import hobby.servah.morphvasion.manager.PhaseManager
+import hobby.servah.morphvasion.util.Utils
 import org.bukkit.plugin.java.JavaPlugin
 
 class MorphVasion : JavaPlugin() {
@@ -12,12 +13,15 @@ class MorphVasion : JavaPlugin() {
     override fun onEnable() {
         saveDefaultConfig()
 
+        Utils.prefix = config.getString("prefix").toString()
+
         phaseManager = PhaseManager(this)
 
         registerCommands()
     }
 
     override fun onDisable() {
+
     }
 
     private fun registerCommands() {

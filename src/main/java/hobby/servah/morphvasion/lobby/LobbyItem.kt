@@ -10,7 +10,7 @@ import org.bukkit.command.defaults.HelpCommand
 import org.bukkit.event.inventory.InventoryClickEvent
 
 // This class has all the items that are used during the LobbyPhase centralized
-class LobbyItem(val plugin: MorphVasion) {
+class LobbyItem(private val plugin: MorphVasion) {
 
     val mapVote = ItemBuilder(Material.MAP).setName(
         Component.text("Map Voting").color(NamedTextColor.YELLOW)
@@ -24,10 +24,6 @@ class LobbyItem(val plugin: MorphVasion) {
         Component.text("Click to select Team").color(NamedTextColor.WHITE)
     ).build()
 
-    private fun mapVoteInv() {
-
-    }
-
     fun onItemClick(e: InventoryClickEvent) {
         if(!e.isRightClick) return
 
@@ -36,7 +32,7 @@ class LobbyItem(val plugin: MorphVasion) {
         }
 
         if(e.currentItem?.itemMeta?.displayName() == mapVote.itemMeta.displayName()) {
-
+            //TODO: add mapVoteInventory()
         }
     }
 
