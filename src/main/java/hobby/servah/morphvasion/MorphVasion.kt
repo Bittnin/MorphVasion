@@ -19,10 +19,11 @@ class MorphVasion : JavaPlugin() {
 
         Utils.prefix = config.getString("prefix").toString()
 
+        indexMaps()
+
         phaseManager = PhaseManager(this)
 
         registerCommands()
-        indexMaps()
     }
 
     override fun onDisable() {
