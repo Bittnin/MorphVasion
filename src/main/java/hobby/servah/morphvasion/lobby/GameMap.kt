@@ -15,13 +15,13 @@ class GameMap(private val icon: Material, private val folder: String, private va
 
     private var activeWorldFolder: File? = null
     private var bukkitWorld: World? = null
-    private val display: ItemStack = ItemStack(icon)
+    val display: ItemStack = ItemStack(icon)
 
     init {
         val meta = display.itemMeta
         meta.displayName(displayName)
-        val lore = meta.lore()
-        ChatPaginator.wordWrap(description, 24).forEach { lore?.add(Utils.convert(it)) }
+        ChatPaginator.wordWrap(description, 24).forEach { meta.lore()?.add(Utils.convert(it)) }
+        display.itemMeta = meta
     }
 
     fun load(): Boolean {
@@ -40,8 +40,13 @@ class GameMap(private val icon: Material, private val folder: String, private va
             .copyRecursively(activeWorldFolder!!, true)
 
         bukkitWorld = Bukkit.createWorld(WorldCreator(activeWorldFolder!!.name))
-        bukkitWorld!!.isAutoSave = false
+        if(bukkitWorld == null) {
+            Utils.console("<red><bold>Error:<bold> Could not load world " +
+                    "<bold>$displayName</bold>. Make sure its folder exists!")
+            return false
+        }
 
+        bukkitWorld!!.isAutoSave = false
         return true
     }
 

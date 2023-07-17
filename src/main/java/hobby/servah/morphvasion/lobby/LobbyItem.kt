@@ -2,12 +2,16 @@ package hobby.servah.morphvasion.lobby
 
 import hobby.servah.morphvasion.MorphVasion
 import hobby.servah.morphvasion.util.ItemBuilder
+import hobby.servah.morphvasion.util.Utils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.defaults.HelpCommand
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.Inventory
+import kotlin.math.ceil
 
 // This class has all the items that are used during the LobbyPhase centralized
 class LobbyItem(private val plugin: MorphVasion) {
@@ -24,6 +28,16 @@ class LobbyItem(private val plugin: MorphVasion) {
         Component.text("Click to select Team").color(NamedTextColor.WHITE)
     ).build()
 
+    val voteInv: Inventory
+
+    init {
+        val maps = plugin.getMaps()
+        val size = (ceil(maps.size.toDouble() / 9.0) * 9).toInt()
+        voteInv = Bukkit.createInventory(null, size, Utils.convert("<yellow><bold>" +
+                "Map Vote"))
+        for(m in maps.values) voteInv.addItem(m.display)
+    }
+
     fun onItemClick(e: InventoryClickEvent) {
         if(!e.isRightClick) return
 
@@ -32,7 +46,7 @@ class LobbyItem(private val plugin: MorphVasion) {
         }
 
         if(e.currentItem?.itemMeta?.displayName() == mapVote.itemMeta.displayName()) {
-            //TODO: add mapVoteInventory()
+            e.whoClicked.openInventory(voteInv)
         }
     }
 

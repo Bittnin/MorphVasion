@@ -16,7 +16,7 @@ class Utils {
             return MiniMessage.miniMessage().deserialize(message)
         }
 
-        fun chat(message: String, p: Player){
+        fun chat(message: String, p: Player) {
             p.sendMessage(MiniMessage.miniMessage().deserialize(prefix + message))
         }
 
