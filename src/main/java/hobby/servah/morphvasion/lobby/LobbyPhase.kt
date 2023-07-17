@@ -141,6 +141,7 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
 
     @EventHandler
     fun onItemClick(e: InventoryClickEvent) {
+        //TODO: maybe improve the way this cancels item movement to completely eliminate it
         if(e.cursor === null) return
         e.isCancelled = true
         itemHandler.onItemClick(e)

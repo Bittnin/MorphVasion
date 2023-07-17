@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.ChatPaginator
 import java.io.File
 
-class GameMap(private val icon: Material, private val folder: String, private val displayName: Component,
+class GameMap(private val icon: Material, private val folder: String, val displayName: Component,
               private val description: String) {
 
     private var activeWorldFolder: File? = null

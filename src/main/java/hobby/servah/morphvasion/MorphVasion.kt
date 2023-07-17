@@ -12,7 +12,7 @@ class MorphVasion : JavaPlugin() {
     private lateinit var phaseManager: PhaseManager
     private lateinit var startCmd: StartCmd
 
-    private var maps = HashMap<String, GameMap>()
+    private val maps = HashMap<String, GameMap>()
 
     override fun onEnable() {
         saveDefaultConfig()
