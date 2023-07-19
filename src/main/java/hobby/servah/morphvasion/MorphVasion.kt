@@ -4,7 +4,9 @@ import hobby.servah.morphvasion.commands.StartCmd
 import hobby.servah.morphvasion.lobby.GameMap
 import hobby.servah.morphvasion.manager.PhaseManager
 import hobby.servah.morphvasion.util.Utils
+import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.plugin.java.JavaPlugin
 
 class MorphVasion : JavaPlugin() {
@@ -14,10 +16,15 @@ class MorphVasion : JavaPlugin() {
 
     private val maps = HashMap<String, GameMap>()
 
+    var activeMap = "Lobby"
+    lateinit var lobbyMap: World
+
     override fun onEnable() {
         saveDefaultConfig()
 
         Utils.prefix = config.getString("prefix").toString()
+
+        lobbyMap = Bukkit.getServer().worlds[0]
 
         indexMaps()
 

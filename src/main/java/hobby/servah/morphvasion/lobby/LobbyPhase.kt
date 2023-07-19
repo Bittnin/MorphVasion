@@ -1,21 +1,21 @@
 package hobby.servah.morphvasion.lobby
 
 import hobby.servah.morphvasion.MorphVasion
+import hobby.servah.morphvasion.game.GamePhase
 import hobby.servah.morphvasion.manager.Phase
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryMoveItemEvent
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.*
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.scheduler.BukkitTask
 import kotlin.math.roundToInt
 
@@ -37,10 +37,27 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
 
     override fun disable() {
         counterTask.cancel()
+        // choose the map with the most votes/random one and pass it on
+        val voteCounts = HashMap<String, Int>()
+        for(v in itemHandler.votes.values) {
+            if(voteCounts[v] == null) voteCounts[v] = 0
+            voteCounts[v] = voteCounts[v]!!.plus(1)
+        }
+        var highestCount = 0
+        var highest: String? = null
+        for(m in voteCounts.keys) {
+            if(voteCounts[m] == null) voteCounts[m] = 0
+            if(voteCounts[m]!! <= highestCount) continue
+            highestCount = voteCounts[m]!!
+            highest = m
+        }
+
+        if(highest != null) plugin.activeMap = highest // stays default if nobody voted
+        else plugin.activeMap = plugin.config.getString("maps.default")!!
     }
 
     override fun getNextPhase(): Phase {
-        return this
+        return GamePhase(plugin)
     }
 
     private fun counter() {
@@ -54,7 +71,6 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
 
             if (secondsLeft == 0) {
                 plugin.getPhaseManager().changePhase(this.getNextPhase())
-                counterTask.cancel()
                 return@Runnable
             }
             secondsLeft--
@@ -96,7 +112,7 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
     fun onLeave(e: PlayerQuitEvent) {
         calculateSecondsLeft()
 
-        //TODO: remove their votes from the map vote system
+        itemHandler.votes.remove(e.player.uniqueId)
     }
 
     @EventHandler
@@ -144,7 +160,16 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
         //TODO: maybe improve the way this cancels item movement to completely eliminate it
         if(e.cursor === null) return
         e.isCancelled = true
-        itemHandler.onItemClick(e)
+        itemHandler.onInvClick(e)
+    }
+
+    @EventHandler
+    fun onPlayerInteract(e: PlayerInteractEvent) {
+        if(e.hand == EquipmentSlot.OFF_HAND) return // to avoid calling the event twice when not needed
+        if(e.action != Action.RIGHT_CLICK_AIR && e.action != Action.RIGHT_CLICK_BLOCK) return
+        if(e.item == null) return
+        e.isCancelled = true
+        itemHandler.itemRightClick(e)
     }
 
 }

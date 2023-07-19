@@ -11,6 +11,7 @@ import org.bukkit.Material
 import org.bukkit.command.defaults.HelpCommand
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
 import java.util.*
@@ -20,21 +21,15 @@ import kotlin.math.ceil
 // This class has all the items that are used during the LobbyPhase centralized
 class LobbyItem(private val plugin: MorphVasion) {
 
-    val mapVote = ItemBuilder(Material.MAP).setName(
-        Component.text("Map Voting").color(NamedTextColor.YELLOW)
-            .decoration(TextDecoration.BOLD, true)
-    ).build()
-    val adminStart = ItemBuilder(Material.REDSTONE).setName(
-        Component.text("Start").color(NamedTextColor.RED)
-            .decoration(TextDecoration.BOLD, true)
-    ).build()
-    val teamSelect = ItemBuilder(Material.WHITE_WOOL).setName(
-        Component.text("Click to select Team").color(NamedTextColor.WHITE)
-    ).build()
+    val mapVote = ItemBuilder(Material.MAP).setName("<yellow><bold>Map Voting").build()
+    val adminStart = ItemBuilder(Material.REDSTONE).setName("<red><bold>Start").build()
+    val teamSelect = ItemBuilder(Material.WHITE_WOOL).setName("<white>Click to select Team").build()
 
     private val maps = plugin.getMaps()
     private val voteInv: Inventory
-    private val votes = HashMap<UUID, String>()
+    val votes = HashMap<UUID, String>()
+
+    private val mobWish = HashMap<UUID, Boolean>() // players who want to play as mobs
 
     init {
         val size = (ceil(maps.size.toDouble() / 9.0) * 9).toInt()
@@ -43,16 +38,16 @@ class LobbyItem(private val plugin: MorphVasion) {
         for(m in maps.values) voteInv.addItem(m.display)
     }
 
-    fun onItemClick(e: InventoryClickEvent) {
-        if(!e.isRightClick) return
+    fun itemRightClick(e: PlayerInteractEvent) {
+        val p = e.player
 
-        if(e.currentItem?.itemMeta?.displayName() == adminStart.itemMeta.displayName()) {
-            plugin.getStartCmd().onCommand(e.whoClicked, HelpCommand(), "start", null)
+        if(e.item!!.itemMeta?.displayName() == adminStart.itemMeta.displayName()) {
+            plugin.getStartCmd().onCommand(p, HelpCommand(), "start", null)
         }
 
-        val id = e.whoClicked.uniqueId
+        val id = p.uniqueId
 
-        if(e.currentItem?.itemMeta?.displayName() == mapVote.itemMeta.displayName()) {
+        if(e.item!!.itemMeta?.displayName() == mapVote.itemMeta.displayName()) {
             if(votes[id] != null) { // this is for marking the map the player voted for
                 val clone = Bukkit.createInventory(null, voteInv.size, Utils.convert("<yellow><bold>" +
                         "Map Vote"))
@@ -64,12 +59,15 @@ class LobbyItem(private val plugin: MorphVasion) {
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
                     i.setItemMeta(meta)
                 }
-                e.whoClicked.openInventory(clone)
+                p.openInventory(clone)
                 return
             }
-            e.whoClicked.openInventory(voteInv)
+            p.openInventory(voteInv)
         }
 
+    }
+
+    fun onInvClick(e: InventoryClickEvent) {
         for(s in maps.keys) {
             if(e.currentItem?.itemMeta?.displayName() != maps[s]?.displayName) continue
             votes[e.whoClicked.uniqueId] = s

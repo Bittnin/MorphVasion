@@ -4,6 +4,8 @@ import hobby.servah.morphvasion.MorphVasion
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.entity.Player
 
 class Utils {
@@ -27,6 +29,10 @@ class Utils {
 
         fun configString(path: String, plugin: MorphVasion): Component {
             return Component.text(plugin.config.getString(path).toString())
+        }
+
+        fun move(world: World, p: Player) {
+            p.teleport(Location(world,0.0,0.0, 0.0))
         }
 
     }
