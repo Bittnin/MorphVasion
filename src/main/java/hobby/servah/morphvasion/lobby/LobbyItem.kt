@@ -3,9 +3,6 @@ package hobby.servah.morphvasion.lobby
 import hobby.servah.morphvasion.MorphVasion
 import hobby.servah.morphvasion.util.ItemBuilder
 import hobby.servah.morphvasion.util.Utils
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.defaults.HelpCommand
@@ -15,7 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.ceil
 
 // This class has all the items that are used during the LobbyPhase centralized
@@ -23,7 +19,9 @@ class LobbyItem(private val plugin: MorphVasion) {
 
     val mapVote = ItemBuilder(Material.MAP).setName("<yellow><bold>Map Voting").build()
     val adminStart = ItemBuilder(Material.REDSTONE).setName("<red><bold>Start").build()
-    val teamSelect = ItemBuilder(Material.WHITE_WOOL).setName("<white>Click to select Team").build()
+    val teamSelect = ItemBuilder(Material.WHITE_WOOL).setName("<rainbow>Click to select Team")
+        .setLore("<yellow><bold>Right click</bold> this item",
+                "<yellow>in your hand to select your team!").build()
 
     private val maps = plugin.getMaps()
     private val voteInv: Inventory
@@ -46,6 +44,17 @@ class LobbyItem(private val plugin: MorphVasion) {
         }
 
         val id = p.uniqueId
+
+        if(e.item!!.lore() == teamSelect.lore()) { // Cycle through the different team options
+            mobWish[id] = mobWish[id] == false
+            if(mobWish[id]!!) { // Player has selected the mob team
+                e.item!!.type = Material.ZOMBIE_HEAD
+                ItemBuilder.setDisplayName(e.item!!, "<yellow>Selected Team: <green><bold>MOBS")
+            } else {
+                e.item!!.type = Material.DIAMOND_CHESTPLATE
+                ItemBuilder.setDisplayName(e.item!!, "<yellow>Selected Team: <blue><bold>HUMANS")
+            }
+        }
 
         if(e.item!!.itemMeta?.displayName() == mapVote.itemMeta.displayName()) {
             if(votes[id] != null) { // this is for marking the map the player voted for

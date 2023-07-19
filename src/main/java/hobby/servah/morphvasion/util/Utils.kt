@@ -28,7 +28,7 @@ class Utils {
         }
 
         fun configString(path: String, plugin: MorphVasion): Component {
-            return Component.text(plugin.config.getString(path).toString())
+            return convert(plugin.config.getString(path).toString())
         }
 
         fun move(world: World, p: Player) {

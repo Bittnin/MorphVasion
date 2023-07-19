@@ -51,10 +51,10 @@ class MorphVasion : JavaPlugin() {
         }
         for(k in config.getConfigurationSection("maps")!!.getKeys(false)) {
             if(k == "default") continue
-            val icon = Material.getMaterial(config.getString("$k.icon").toString())
-            val folder = config.getString("$k.folder")
-            val displayName = Utils.configString("$k.name", this)
-            val description = config.getString("$k.description")
+            val icon = Material.getMaterial(config.getString("maps.$k.icon").toString())
+            val folder = config.getString("maps.$k.folder")
+            val displayName = Utils.configString("maps.$k.name", this)
+            val description = config.getString("maps.$k.description")
             if(icon == null || folder == null || description == null) {
                 Utils.console("<red><bold>Error:</bold> The config.yml entry of the map <bold>$k</bold> " +
                         "contains errors and needs to be fixed!")

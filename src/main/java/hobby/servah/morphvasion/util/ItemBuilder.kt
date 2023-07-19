@@ -8,6 +8,15 @@ import org.bukkit.inventory.meta.ItemMeta
 
 class ItemBuilder(material: Material) {
 
+    companion object{
+        fun setDisplayName(i: ItemStack, name: String): ItemStack {
+            val meta = i.itemMeta
+            meta.displayName(Utils.convert(name))
+            i.itemMeta = meta
+            return i
+        }
+    }
+
     private val stack: ItemStack
     private val meta: ItemMeta
 
@@ -21,8 +30,12 @@ class ItemBuilder(material: Material) {
         return this
     }
 
-    fun setLore(vararg lines: Component): ItemBuilder {
-        meta.lore(lines.toList())
+    fun setLore(vararg lines: String): ItemBuilder {
+        val newLore = mutableListOf<Component>()
+        for(l in lines) {
+            newLore.add(Utils.convert(l))
+        }
+        meta.lore(newLore)
         return this
     }
 
