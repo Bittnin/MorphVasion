@@ -61,9 +61,10 @@ class LobbyItem(private val plugin: MorphVasion) {
                 val clone = Bukkit.createInventory(null, voteInv.size, Utils.convert("<yellow><bold>" +
                         "Map Vote"))
                 clone.contents = voteInv.contents
-                for(i in clone) {
-                    if(i.displayName() != maps[votes[id]]?.displayName) continue
-                    i.addEnchantment(Enchantment.LUCK, 0)
+                for(i in clone.contents) {
+                    if(i == null) continue
+                    if(i.displayName() != maps[votes[id]]?.display?.displayName()) continue
+                    i.addUnsafeEnchantment(Enchantment.LUCK, 1)
                     val meta = i.itemMeta
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
                     i.setItemMeta(meta)

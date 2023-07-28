@@ -2,11 +2,7 @@ package hobby.servah.morphvasion.game
 
 import hobby.servah.morphvasion.util.Utils
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
-import org.bukkit.WorldCreator
+import org.bukkit.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.ChatPaginator
 import java.io.File
@@ -21,7 +17,10 @@ class GameMap(icon: Material, private val folder: String, val displayName: Compo
     init {
         val meta = display.itemMeta
         meta.displayName(displayName)
-        ChatPaginator.wordWrap(description, 24).forEach { meta.lore()?.add(Utils.convert(it)) }
+        for(word in ChatPaginator.wordWrap(description, 24)) {
+            if(!meta.hasLore()) meta.lore(mutableListOf(Utils.convert(word)))
+            else meta.lore()!!.add(Utils.convert(word))
+        }
         display.itemMeta = meta
     }
 
@@ -33,11 +32,11 @@ class GameMap(icon: Material, private val folder: String, val displayName: Compo
         }
 
         activeWorldFolder = File(
-            Bukkit.getWorldContainer().parent + "/maps",
-            folder + "_active_" + System.currentTimeMillis()
+            "${Bukkit.getWorldContainer().path}/maps",
+            "${folder}_active_${System.currentTimeMillis()}"
         )
 
-        File(Bukkit.getWorldContainer().parent + "/maps", folder)
+        File("${Bukkit.getWorldContainer().path}/maps/$folder")
             .copyRecursively(activeWorldFolder!!, true)
 
         bukkitWorld = Bukkit.createWorld(WorldCreator(activeWorldFolder!!.name))

@@ -4,8 +4,6 @@ import hobby.servah.morphvasion.MorphVasion
 import hobby.servah.morphvasion.lobby.LobbyPhase
 import hobby.servah.morphvasion.manager.PhaseManager
 import hobby.servah.morphvasion.util.Utils
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -24,7 +22,7 @@ class StartCmd(private val plugin: MorphVasion, private val pm: PhaseManager = p
 
         if(pm.getCurrentPhase() !is LobbyPhase) {
             Utils.chat("<red>You can only start the game when it is in the Lobby phase!", sender)
-            return false
+            return true
         }
 
         //This should execute a soft start, meaning not transferring into the game phase directly
