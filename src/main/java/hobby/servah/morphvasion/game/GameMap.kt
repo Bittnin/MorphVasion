@@ -1,8 +1,9 @@
-package hobby.servah.morphvasion.lobby
+package hobby.servah.morphvasion.game
 
 import hobby.servah.morphvasion.util.Utils
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.WorldCreator
@@ -10,8 +11,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.ChatPaginator
 import java.io.File
 
-class GameMap(private val icon: Material, private val folder: String, val displayName: Component,
-              private val description: String) {
+class GameMap(icon: Material, private val folder: String, val displayName: Component,
+    description: String, val playerSpawn: Location?) {
 
     private var activeWorldFolder: File? = null
     private var bukkitWorld: World? = null

@@ -1,23 +1,28 @@
 package hobby.servah.morphvasion
 
+import hobby.servah.morphvasion.commands.SetPlayerSpawn
 import hobby.servah.morphvasion.commands.StartCmd
-import hobby.servah.morphvasion.lobby.GameMap
+import hobby.servah.morphvasion.game.GameMap
 import hobby.servah.morphvasion.manager.PhaseManager
 import hobby.servah.morphvasion.util.Utils
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.collections.HashMap
 
 class MorphVasion : JavaPlugin() {
 
     private lateinit var phaseManager: PhaseManager
     private lateinit var startCmd: StartCmd
+    private lateinit var setPlayerSpawn: SetPlayerSpawn
 
     private val maps = HashMap<String, GameMap>()
 
     var activeMap = "Lobby"
     lateinit var lobbyMap: World
+    lateinit var currentWorld: World
 
     override fun onEnable() {
         saveDefaultConfig()
@@ -25,6 +30,7 @@ class MorphVasion : JavaPlugin() {
         Utils.prefix = config.getString("prefix").toString()
 
         lobbyMap = Bukkit.getServer().worlds[0]
+        currentWorld = lobbyMap
 
         indexMaps()
 
@@ -40,6 +46,8 @@ class MorphVasion : JavaPlugin() {
     private fun registerCommands() {
         startCmd = StartCmd(this)
         getCommand("start")?.setExecutor(startCmd)
+        setPlayerSpawn = SetPlayerSpawn(this)
+        getCommand("setplayerspawn")?.setExecutor(setPlayerSpawn)
     }
 
     private fun indexMaps() {
@@ -60,7 +68,10 @@ class MorphVasion : JavaPlugin() {
                         "contains errors and needs to be fixed!")
                 return
             }
-            maps[k] = GameMap(icon, folder, displayName, description)
+            var loc: Location? = null
+            if(config.getConfigurationSection("maps.$k.location") != null)
+                loc = Utils.readLocation("maps.$k", this)
+            maps[k] = GameMap(icon, folder, displayName, description, loc)
         }
     }
 

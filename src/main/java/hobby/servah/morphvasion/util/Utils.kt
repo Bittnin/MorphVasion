@@ -6,6 +6,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Utils {
@@ -18,8 +19,8 @@ class Utils {
             return MiniMessage.miniMessage().deserialize(message)
         }
 
-        fun chat(message: String, p: Player) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize(prefix + message))
+        fun chat(message: String, c: CommandSender) {
+            c.sendMessage(MiniMessage.miniMessage().deserialize(prefix + message))
         }
 
         fun console(message: String) {
@@ -32,7 +33,23 @@ class Utils {
         }
 
         fun move(world: World, p: Player) {
-            p.teleport(Location(world,0.0,0.0, 0.0))
+            p.teleport(Location(world,0.0,0.0, 0.0).toHighestLocation())
+        }
+
+        fun saveLocation(path: String, loc: Location, plugin: MorphVasion) {
+            val conf = plugin.config
+            conf.set("$path.x", loc.x)
+            conf.set("$path.y", loc.y)
+            conf.set("$path.z", loc.z)
+            conf.set("$path.yaw", loc.yaw)
+            conf.set("$path.pitch", loc.pitch)
+        }
+
+        fun readLocation(path: String, plugin: MorphVasion): Location {
+            val conf = plugin.config
+            return Location(plugin.currentWorld, conf.getDouble("$path.x"), conf.getDouble("$path.y"),
+                conf.getDouble("$path.z"), conf.getDouble("$path.yaw").toFloat(),
+                conf.getDouble("$path.pitch").toFloat())
         }
 
     }

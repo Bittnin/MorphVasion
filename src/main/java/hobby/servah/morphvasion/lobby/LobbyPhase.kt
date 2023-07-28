@@ -25,6 +25,8 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
     private val itemHandler: LobbyItem = LobbyItem(plugin)
     private val config = plugin.config
 
+    private val nextPhase = GamePhase(plugin)
+
     //counter
     private val maxLobbyTimer = config.getInt("lobby.maxLobbyTimer")
     private var secondsLeft= -1
@@ -54,10 +56,31 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
 
         if(highest != null) plugin.activeMap = highest // stays default if nobody voted
         else plugin.activeMap = plugin.config.getString("maps.default")!!
+
+        //assign everyone to their teams whilst trying to give everyone their preferred team
+        var mobs = 0
+        var humans = 0
+        for(p in Bukkit.getOnlinePlayers()) {
+            val id = p.uniqueId
+            if(itemHandler.mobWish[id] != null) {
+                nextPhase.isMob[id] = itemHandler.mobWish[id]!!
+                if(itemHandler.mobWish[id]!!) mobs++
+                else humans++
+                continue
+            }
+            // the player has not used the team selection device and can be assigned (mostly) randomly
+            if(humans == 0) nextPhase.isMob[id] = false
+            else nextPhase.isMob[id] = true
+        }
+        if(Bukkit.getOnlinePlayers().size < 2) return
+
+        // make sure that none of the teams are empty
+        if(mobs == 0) nextPhase.isMob[Bukkit.getOnlinePlayers().random().uniqueId] = true
+        else if(humans == 0) nextPhase.isMob[Bukkit.getOnlinePlayers().random().uniqueId] = false
     }
 
     override fun getNextPhase(): Phase {
-        return GamePhase(plugin)
+        return nextPhase
     }
 
     private fun counter() {
@@ -158,7 +181,7 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
     @EventHandler
     fun onItemClick(e: InventoryClickEvent) {
         //TODO: maybe improve the way this cancels item movement to completely eliminate it
-        if(e.cursor === null) return
+        if(e.cursor == null) return
         e.isCancelled = true
         itemHandler.onInvClick(e)
     }

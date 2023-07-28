@@ -3,6 +3,7 @@ package hobby.servah.morphvasion.commands
 import hobby.servah.morphvasion.MorphVasion
 import hobby.servah.morphvasion.lobby.LobbyPhase
 import hobby.servah.morphvasion.manager.PhaseManager
+import hobby.servah.morphvasion.util.Utils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.Command
@@ -17,12 +18,12 @@ class StartCmd(private val plugin: MorphVasion, private val pm: PhaseManager = p
         if(sender !is Player && sender !is ConsoleCommandSender) return false
 
         if(sender is Player && !sender.hasPermission("morphvasion.start")) {
-            sender.sendMessage(Component.text("You do not have the permission to execute this command!").color(NamedTextColor.RED))
+            Utils.chat("<red>You do not have the permission to execute this command!", sender)
             return false
         }
 
         if(pm.getCurrentPhase() !is LobbyPhase) {
-            sender.sendMessage(Component.text("You can only start the game when it is in the Lobby phase!").color(NamedTextColor.RED))
+            Utils.chat("<red>You can only start the game when it is in the Lobby phase!", sender)
             return false
         }
 

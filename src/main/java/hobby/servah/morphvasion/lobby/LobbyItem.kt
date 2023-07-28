@@ -27,7 +27,7 @@ class LobbyItem(private val plugin: MorphVasion) {
     private val voteInv: Inventory
     val votes = HashMap<UUID, String>()
 
-    private val mobWish = HashMap<UUID, Boolean>() // players who want to play as mobs
+    val mobWish = HashMap<UUID, Boolean>() // players who want to play as mobs
 
     init {
         val size = (ceil(maps.size.toDouble() / 9.0) * 9).toInt()
