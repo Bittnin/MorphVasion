@@ -6,7 +6,6 @@ import hobby.servah.morphvasion.game.GameMap
 import hobby.servah.morphvasion.manager.PhaseManager
 import hobby.servah.morphvasion.util.Utils
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.plugin.java.JavaPlugin
@@ -20,7 +19,7 @@ class MorphVasion : JavaPlugin() {
     private val maps = HashMap<String, GameMap>()
 
     var activeMap = "Lobby"
-    lateinit var lobbyMap: World
+    private lateinit var lobbyMap: World
     lateinit var currentWorld: World
 
     override fun onEnable() {
@@ -36,10 +35,16 @@ class MorphVasion : JavaPlugin() {
         phaseManager = PhaseManager(this)
 
         registerCommands()
+
+        Utils.console("<bold><rainbow>The MorphVasion Plugin has been successfully enabled!")
     }
 
     override fun onDisable() {
+        saveConfig()
 
+        maps.values.forEach { it.unload() }
+
+        Utils.console("<bold><rainbow>Byeeeeeeeeeeee!")
     }
 
     private fun registerCommands() {
@@ -67,10 +72,7 @@ class MorphVasion : JavaPlugin() {
                         "contains errors and needs to be fixed!")
                 return
             }
-            var loc: Location? = null
-            if(config.getConfigurationSection("maps.$k.location") != null)
-                loc = Utils.readLocation("maps.$k", this)
-            maps[k] = GameMap(icon, folder, displayName, description, loc)
+            maps[k] = GameMap(icon, folder, displayName, description, k, this)
         }
     }
 

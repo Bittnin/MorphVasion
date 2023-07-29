@@ -10,7 +10,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 import java.util.*
-import kotlin.collections.HashMap
 
 class GamePhase(plugin: MorphVasion): Phase(plugin) {
 
@@ -24,9 +23,19 @@ class GamePhase(plugin: MorphVasion): Phase(plugin) {
         gameMap.load()
         world = gameMap.getWorld()!!
         plugin.currentWorld = world
-        Bukkit.getOnlinePlayers().forEach {
-            Utils.move(world, it)
-            if(isMob[it.uniqueId] == null) makeSpectator(it)
+        for(p in Bukkit.getOnlinePlayers()) {
+            Utils.move(world, p)
+            if(gameMap.playerSpawn != null) p.teleport(gameMap.playerSpawn!!)
+            if(isMob[p.uniqueId] == null) {
+                makeSpectator(p)
+                continue
+            }
+            if(isMob[p.uniqueId] != true) continue
+            // put the mobs into fake spectator mode so that they can look around and select a character
+            val newLoc = p.location
+            newLoc.y += 50
+            p.teleport(newLoc)
+            p.isInvisible = true
         }
     }
 
@@ -46,6 +55,11 @@ class GamePhase(plugin: MorphVasion): Phase(plugin) {
 
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
-        makeSpectator(e.player)
+        val p = e.player
+        if(isMob[p.uniqueId] == null) {
+            makeSpectator(p)
+            Utils.chat("<red>You joined a running match and have therefore been put into " +
+                    "<bold>spectator</bold> mode!", p)
+        }
     }
 }

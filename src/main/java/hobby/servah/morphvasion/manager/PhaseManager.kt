@@ -1,7 +1,9 @@
 package hobby.servah.morphvasion.manager
 
 import hobby.servah.morphvasion.MorphVasion
+import hobby.servah.morphvasion.game.GamePhase
 import hobby.servah.morphvasion.lobby.LobbyPhase
+import hobby.servah.morphvasion.util.Utils
 import org.bukkit.Bukkit
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
@@ -23,6 +25,8 @@ class PhaseManager(private val plugin: MorphVasion) {
     }
 
     fun changePhase(newPhase: Phase) {
+        if(currentPhase is LobbyPhase && newPhase is GamePhase) Bukkit.broadcast(Utils.chat("<yellow>The game " +
+                "will be <bold>starting</bold> now, please be patient! <gray>(Lag may occur)"))
         currentPhase.disable()
         HandlerList.unregisterAll(currentPhase)
 

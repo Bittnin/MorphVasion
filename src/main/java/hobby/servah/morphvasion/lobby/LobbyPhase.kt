@@ -69,8 +69,7 @@ class LobbyPhase(plugin : MorphVasion) : Phase(plugin) {
                 continue
             }
             // the player has not used the team selection device and can be assigned (mostly) randomly
-            if(humans == 0) nextPhase.isMob[id] = false
-            else nextPhase.isMob[id] = true
+            nextPhase.isMob[id] = humans != 0
         }
         if(Bukkit.getOnlinePlayers().size < 2) return
 

@@ -1,5 +1,7 @@
 package hobby.servah.morphvasion.game
 
+import hobby.servah.morphvasion.MorphVasion
+import hobby.servah.morphvasion.util.ItemBuilder
 import hobby.servah.morphvasion.util.Utils
 import net.kyori.adventure.text.Component
 import org.bukkit.*
@@ -8,18 +10,19 @@ import org.bukkit.util.ChatPaginator
 import java.io.File
 
 class GameMap(icon: Material, private val folder: String, val displayName: Component,
-    description: String, val playerSpawn: Location?) {
+              description: String, private val configPath: String, private val plugin: MorphVasion) {
 
-    private var activeWorldFolder: File? = null
+    var activeWorldFolder: File? = null
     private var bukkitWorld: World? = null
+    var playerSpawn: Location? = null
     val display: ItemStack = ItemStack(icon)
 
     init {
         val meta = display.itemMeta
         meta.displayName(displayName)
-        for(word in ChatPaginator.wordWrap(description, 24)) {
-            if(!meta.hasLore()) meta.lore(mutableListOf(Utils.convert(word)))
-            else meta.lore()!!.add(Utils.convert(word))
+        for(line in ChatPaginator.wordWrap(description, 48)) {
+            if(!meta.hasLore()) meta.lore(mutableListOf(Utils.convert(line)))
+            else meta.lore(ItemBuilder.addLineToLore(meta.lore()!!, Utils.convert(line)))
         }
         display.itemMeta = meta
     }
@@ -32,8 +35,7 @@ class GameMap(icon: Material, private val folder: String, val displayName: Compo
         }
 
         activeWorldFolder = File(
-            "${Bukkit.getWorldContainer().path}/maps",
-            "${folder}_active_${System.currentTimeMillis()}"
+            "${Bukkit.getWorldContainer().path}/${folder}_active_${System.currentTimeMillis()}"
         )
 
         File("${Bukkit.getWorldContainer().path}/maps/$folder")
@@ -42,11 +44,15 @@ class GameMap(icon: Material, private val folder: String, val displayName: Compo
         bukkitWorld = Bukkit.createWorld(WorldCreator(activeWorldFolder!!.name))
         if(bukkitWorld == null) {
             Utils.console("<red><bold>Error:<bold> Could not load world " +
-                    "<bold>$displayName</bold>. Make sure its folder exists!")
+                    "<bold>$folder</bold>. Make sure its folder exists!")
             return false
         }
 
         bukkitWorld!!.isAutoSave = false
+
+        playerSpawn = Utils.readLocation("maps.$configPath.playerSpawn", plugin)
+        playerSpawn?.world = bukkitWorld
+
         return true
     }
 

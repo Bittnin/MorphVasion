@@ -64,7 +64,7 @@ class LobbyItem(private val plugin: MorphVasion) {
                 for(i in clone.contents) {
                     if(i == null) continue
                     if(i.displayName() != maps[votes[id]]?.display?.displayName()) continue
-                    i.addUnsafeEnchantment(Enchantment.LUCK, 1)
+                    i.addUnsafeEnchantment(Enchantment.LUCK, 1) //TODO: maybe highlight more
                     val meta = i.itemMeta
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
                     i.setItemMeta(meta)

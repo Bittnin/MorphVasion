@@ -24,8 +24,14 @@ maps:
     #The active maps will also be put here (./maps/)
     folder: 'default_map'
     name: '<yellow><bold>Place<reset><green>Holdèur'
-    description: '<green>This is the <bold>default <reset><green>
-                  map bundled with the <dark_green>Morph<green><bold>Vasion <reset><yellow>Plugin<green>!'
+    description: '<green>This is the <bold>default <reset><green>map bundled with the 
+    <dark_green>Morph<green><bold>Vasion <reset><yellow>Plugin<green>!'
+    playerSpawn:
+      x: -209.0
+      y: 7.0
+      z: 16.0
+      yaw: 90.0
+      pitch: -4.0
 
 lobby:
   maxLobbyTimer: 120

@@ -2,12 +2,9 @@ package hobby.servah.morphvasion.commands
 
 import hobby.servah.morphvasion.MorphVasion
 import hobby.servah.morphvasion.util.Utils
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
 class SetPlayerSpawn(private val plugin: MorphVasion): CommandExecutor {
@@ -23,7 +20,8 @@ class SetPlayerSpawn(private val plugin: MorphVasion): CommandExecutor {
             return false
         }
 
-        Utils.saveLocation("${plugin.activeMap}.location", sender.location, plugin)
+        Utils.saveLocation("maps.${plugin.activeMap}.playerSpawn", sender.location, plugin)
+        plugin.saveConfig()
         Utils.chat("<green>The location was successfully saved!", sender)
         return true
     }

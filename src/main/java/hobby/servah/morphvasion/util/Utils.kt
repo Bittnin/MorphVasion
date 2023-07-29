@@ -20,12 +20,15 @@ class Utils {
         }
 
         fun chat(message: String, c: CommandSender) {
-            c.sendMessage(MiniMessage.miniMessage().deserialize(prefix + message))
+            c.sendMessage(convert(prefix + message))
+        }
+
+        fun chat(message: String): Component {
+            return convert(prefix + message)
         }
 
         fun console(message: String) {
-            Bukkit.getConsoleSender().sendMessage(MiniMessage.miniMessage()
-                .deserialize(prefix + message))
+            Bukkit.getConsoleSender().sendMessage(convert(prefix + message))
         }
 
         fun configString(path: String, plugin: MorphVasion): Component {

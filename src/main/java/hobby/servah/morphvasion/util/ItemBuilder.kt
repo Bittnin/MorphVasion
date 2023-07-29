@@ -15,6 +15,11 @@ class ItemBuilder(material: Material) {
             i.itemMeta = meta
             return i
         }
+
+        fun addLineToLore(lore: MutableList<Component>, newLine: Component): List<Component> {
+            lore.add(newLine)
+            return lore
+        }
     }
 
     private val stack: ItemStack
