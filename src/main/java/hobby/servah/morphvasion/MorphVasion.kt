@@ -19,7 +19,7 @@ class MorphVasion : JavaPlugin() {
     private val maps = HashMap<String, GameMap>()
 
     var activeMap = "Lobby"
-    private lateinit var lobbyMap: World
+    lateinit var lobbyMap: World
     lateinit var currentWorld: World
 
     override fun onEnable() {
