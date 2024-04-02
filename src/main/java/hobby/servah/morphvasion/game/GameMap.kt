@@ -12,7 +12,7 @@ import java.io.File
 class GameMap(icon: Material, private val folder: String, val displayName: Component,
               description: String, private val configPath: String, private val plugin: MorphVasion) {
 
-    var activeWorldFolder: File? = null
+    private var activeWorldFolder: File? = null
     private var bukkitWorld: World? = null
     var playerSpawn: Location? = null
     val display: ItemStack = ItemStack(icon)

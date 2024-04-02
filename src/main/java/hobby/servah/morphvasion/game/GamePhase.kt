@@ -22,7 +22,7 @@ class GamePhase(plugin: MorphVasion): Phase(plugin) {
     val isMob = HashMap<UUID, Boolean>()
 
     override fun enable() {
-        waveMan = WaveManager()
+        waveMan = WaveManager(plugin)
 
         gameMap = plugin.getMaps()[plugin.activeMap]!!
         gameMap.load()

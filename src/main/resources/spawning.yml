@@ -1,18 +1,19 @@
 # here you can change the spawning values for the individual monsters
 # these will be multiplied with those of the specific waves
-# to determine how many need to be spawned
-zombie: 30
-creeper: 30
-spider: 15
-skeleton: 15
-builder: 15
-witch: 10
-ghast: 3
+# to determine how many of the given mob will be spawned
+mobs:
+  zombie: 30
+  creeper: 30
+  spider: 15
+  skeleton: 15
+  builder: 15
+  witch: 10
+  ghast: 3
 
 # you can also change it for particular waves
 # example:
 
 #waves:
 #  2:
-#    overall: 0.8
+#    general: 0.8
 #    zombie: 3

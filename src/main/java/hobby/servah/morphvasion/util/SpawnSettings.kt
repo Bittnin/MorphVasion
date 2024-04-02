@@ -4,14 +4,14 @@ import hobby.servah.morphvasion.MorphVasion
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
-class SpawnSettings(main: MorphVasion) {
+class SpawnSettings(plugin: MorphVasion) {
 
-    var file = File(main.dataFolder, "spawning.yml")
+    private var file = File(plugin.dataFolder, "spawning.yml")
     var config = YamlConfiguration()
 
     init {
         //load
-        if(!file.exists()) main.saveResource("spawning.yml", false)
+        if(!file.exists()) plugin.saveResource("spawning.yml", false)
 
         try {
             config.load(file)
