@@ -9,8 +9,6 @@ import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import java.util.*
 
@@ -19,11 +17,13 @@ class GamePhase(plugin: MorphVasion): Phase(plugin) {
     private lateinit var gameMap: GameMap
     private lateinit var world: World
 
+    private lateinit var waveMan: WaveManager
+
     val isMob = HashMap<UUID, Boolean>()
 
-    val gamers = HashMap<UUID, Gamer>()
-
     override fun enable() {
+        waveMan = WaveManager()
+
         gameMap = plugin.getMaps()[plugin.activeMap]!!
         gameMap.load()
         world = gameMap.getWorld()!!
@@ -68,15 +68,6 @@ class GamePhase(plugin: MorphVasion): Phase(plugin) {
         p.gameMode = GameMode.SPECTATOR
     }
 
-    fun getGamer(p: Player): Gamer {
-        return getGamer(p.uniqueId)
-    }
-
-    fun getGamer(u: UUID): Gamer {
-        if(gamers[u] == null) gamers[u] = Gamer()
-        return gamers[u]!!
-    }
-
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
         val p = e.player
@@ -85,16 +76,6 @@ class GamePhase(plugin: MorphVasion): Phase(plugin) {
             Utils.chat("<red>You joined a running match and have therefore been put into " +
                     "<bold>spectator</bold> mode!", p)
         }
-    }
-
-    @EventHandler
-    fun onDamage(e: EntityDamageEvent) {
-        e.isCancelled = true
-    }
-
-    @EventHandler
-    fun onHunger(e: FoodLevelChangeEvent) {
-        e.isCancelled = true
     }
 
 }
