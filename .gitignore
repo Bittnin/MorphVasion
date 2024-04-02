@@ -1,6 +1,8 @@
 #added by me
 server/
 
+pom.xml
+
 # User-specific stuff
 .idea/
 
@@ -114,3 +116,4 @@ buildNumber.properties
 
 # Common working directory
 run/
+~$oadmap.docx
